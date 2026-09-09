@@ -1,4 +1,3 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -6,4 +5,5 @@ const nextConfig = {
     domains: ['ipfs.io', 'arweave.net'],
   },
 };
+
 module.exports = nextConfig;

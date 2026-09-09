@@ -1,4 +1,3 @@
-
 from loguru import logger
 from web3 import Web3
 from config.settings import settings

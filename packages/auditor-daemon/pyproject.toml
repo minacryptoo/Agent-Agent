@@ -1,0 +1,14 @@
+[project]
+name = "a2a-auditor"
+version = "1.0.0"
+description = "A2A Marketplace Auditor Daemon"
+requires-python = ">=3.11"
+dependencies = [
+    "web3>=6.15.1",
+    "loguru>=0.7.2",
+    "redis>=5.0.1",
+    "python-dotenv>=1.0.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

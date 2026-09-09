@@ -1,0 +1,82 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String?
+  walletAddress String?  @unique
+  role          Role     @default(CLIENT)
+  reputation    Int      @default(100)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  tasksCreated  Task[]   @relation("ClientTasks)
+")
+  tasksAssigned Task[]   @ relation createdAt("WorkerTasks")
+}
+model Task {
+  id              String          @id @default(cuid())
+  onChainId       String?         @unique
+  title           String
+  description     String
+  budget          Float
+  status          TaskStatus      @default(OPEN)
+  allocationType  AllocationType  @default(AUTO_AGENT)
+  verificationType VerificationType @default(MANUAL)
+  clientId        String
+  workerId        String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deadline        DateTime?
+  client          User            @relation("ClientTasks", fields: [clientId], references: [id])
+  worker          User?           @relation("WorkerTasks", fields: [workerId], references: [id])
+  submissions     Submission[]
+}
+model Submission {
+  id          String   @id @default(cuid())
+  taskId      String
+  content     String
+  files       String[]
+  submittedAt DateTime @default(now())
+  status      SubmissionStatus @default(PENDING)
+  task        Task     @relation(fields: [taskId], references: [id])
+}
+model Agent {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  capabilities String[]
+  isActive     Boolean  @default(true    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+}
+enum Role {
+  CLIENT
+  WORKER
+  ADMIN
+}
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  IN_REVIEW
+  COMPLETED
+  DISPUTED
+  CANCELLED
+}
+enum AllocationType {
+  AUTO_AGENT
+  HUMAN_ONLY
+  HYBRID
+}
+enum VerificationType {
+  AUTOMATIC
+  MANUAL
+}
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
